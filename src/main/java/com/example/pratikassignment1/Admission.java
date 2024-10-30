@@ -4,9 +4,9 @@ public class Admission {
     private int sub_id;
     private String sub_title;
     private String sub_instructor;
-    private int sub_grade;
+    private String sub_grade;
 
-    public Admission(int sub_id, String sub_title, String sub_instructor, int sub_grade) {
+    public Admission(int sub_id, String sub_title, String sub_instructor, String sub_grade) {
         this.sub_title = sub_title;
         this.sub_id = sub_id;
         this.sub_instructor = sub_instructor;
@@ -37,11 +37,11 @@ public class Admission {
         this.sub_instructor = sub_instructor;
     }
 
-    public int getSub_grade() {
+    public String getSub_grade() {
         return sub_grade;
     }
 
-    public void setSub_grade(int sub_grade) {
+    public void setSub_grade(String sub_grade) {
         this.sub_grade = sub_grade;
     }
 }

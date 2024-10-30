@@ -1,65 +1,55 @@
 package com.example.pratikassignment1;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.cell.PropertyValueFactory;
-import java.net.URL;
-import java.sql.*;
-import java.util.ResourceBundle;
-public class HelloController implements Initializable {
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
+import javafx.stage.Stage;
+
+import java.io.IOException;
+
+public class HelloController {
+
     @FXML
-    private TableView<Admission> tableView;
+    public TextField user_name;
     @FXML
-    private TableColumn<Admission,Integer > sub_id;
+    public PasswordField password_field;
     @FXML
-    private TableColumn<Admission, String> sub_title;
+    public Label output_area;
+
+    private final String realuser = "user420";
+    private final String realpass = "555";
+
     @FXML
-    private TableColumn<Admission,String> sub_instructor;
-    @FXML
-    private TableColumn<Admission,Integer> sub_grade;
-    ObservableList<Admission> list = FXCollections.observableArrayList();
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        sub_id.setCellValueFactory(new
-                PropertyValueFactory<Admission,Integer>("sub_id"));
-        sub_title.setCellValueFactory(new
-                PropertyValueFactory<Admission,String>("sub_title"));
-        sub_instructor.setCellValueFactory(new
-                PropertyValueFactory<Admission,String>("sub_instructor"));
-        sub_grade.setCellValueFactory(new
-                PropertyValueFactory<Admission,Integer>("sub_grade"));
-        tableView.setItems(list);
-    }
-    @FXML
-    protected void CheckDatabaseBtn() {
-        populateTable();
-    }
-    public void populateTable() {
-        // Establish a database connection
-        String jdbcUrl = "jdbc:mysql://localhost:3306/java-lab-prateek";
-        String dbUser = "root";
-        String dbPassword = "";
-        try (Connection connection = DriverManager.getConnection(jdbcUrl, dbUser,
-                dbPassword)) {
-            // Execute a SQL query to retrieve data from the database
-            String query = "SELECT * FROM subjects";
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(query);
-            // Populate the table with data from the database
-            while (resultSet.next()) {
-                int sub_id = resultSet.getInt("sub_id");
-                String sub_title = resultSet.getString("sub_title");
-                String sub_instructor = resultSet.getString("sub_instructor");
-                int sub_grade = resultSet.getInt("sub_grade");
-                tableView.getItems().add(new Admission(sub_id, sub_title, sub_instructor,
-                        sub_grade));
+    public void redirecttodtbs(ActionEvent actionEvent) {
+        String username = user_name.getText();
+        String password = password_field.getText();
+
+        if (username.isEmpty() || password.isEmpty()) {
+            output_area.setText("Please Provide Username or Password.");
+        } else if (username.equals(realuser) && password.equals(realpass)) {
+            output_area.setText("Login Successful!");
+            try {
+                Parent secondScene = FXMLLoader.load(getClass().getResource("dashboardpage.fxml"));
+
+                // Create a new stage for the second scene
+                Stage secondStage = new Stage();
+                secondStage.setTitle("User  Scene");
+                secondStage.setScene(new Scene(secondScene));
+
+                // Close the current stage
+                Stage firstSceneStage = (Stage) user_name.getScene().getWindow(); // Corrected this line
+                firstSceneStage.close();
+                secondStage.show();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } else {
+            output_area.setText("Invalid Username or Password");
         }
     }
 }
